@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <script type="text/javascript"
+    src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+  <title>YAT</title>
+  <style>
+        @font-face {
+            font-family: 'Inter';
+            src: url('/assets/Inter-c8O0ljhh.ttf')  format('truetype');
+            font-display: swap;
+            font-preload: false;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url('/assets/Inter-Italic-B-9PvMw6.ttf')  format('truetype');
+            font-style: italic;
+            font-display: swap;
+            font-preload: false;
+        }
+  </style>
+  <script>
+    (function () {
+      function setRem() {
+        const designWidth = 390; // 设计稿宽度（px）
+        const baseFontSize = 10; // 基准字体大小（px），通常为浏览器默认 16px
+        const viewportWidth = window.innerWidth;
+        const scale = viewportWidth / designWidth;
+        const newFontSize = viewportWidth < 1024 ? baseFontSize * scale : '100';
+        document.documentElement.style.fontSize = `${newFontSize}px`;
+      }
+
+      // 字体延迟加载函数
+      function loadFonts() {
+        const fontFamilies = ['Inter'];
+
+        // 使用FontFace API动态加载字体
+        if ('fonts' in document) {
+          const fontPromises = fontFamilies.map(family => {
+            let fontUrl;
+            let format;
+            
+            switch(family) {
+              case 'Inter':
+                fontUrl = './src/assets/fonts/Inter.ttf';
+                format = 'truetype';
+                break;
+            }
+
+            const font = new FontFace(family, `url(${fontUrl}) format('${format}')`);
+            return font.load().then(() => {
+              document.fonts.add(font);
+              console.log(`Font ${family} loaded successfully`);
+            }).catch(err => {
+              console.warn(`Failed to load font ${family}:`, err);
+            });
+          });
+
+          // 等待所有字体加载完成
+          Promise.all(fontPromises).then(() => {
+            console.log('All fonts loaded');
+            // 触发字体加载完成事件
+            document.dispatchEvent(new CustomEvent('fontsLoaded'));
+          });
+        }
+      }
+
+      // 初始化
+      setRem();
+
+      // 监听窗口大小变化
+      window.addEventListener('resize', setRem);
+
+      // 防抖动（防止频繁触发）
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(setRem, 100);
+      });
+
+      // 延迟加载字体 - 等待页面主要内容加载完成后再加载字体
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          // 再延迟1秒加载字体，确保页面渲染优先级
+          setTimeout(loadFonts, 1000);
+        });
+      } else {
+        // 如果DOM已经加载完成，直接延迟加载
+        setTimeout(loadFonts, 1000);
+      }
+    })();
+  </script>
+  <script type="module" crossorigin src="/assets/index-DtEO3Y4J.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-1BlDGegJ.css">
+</head>
+
+<body>
+  <div id="root" style="width: 100%; height: 100%;"></div>
+  <!-- 将引入的样式表./改成/可解决样式丢失问题 -->
+</body>
+
+</html>

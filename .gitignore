@@ -1,0 +1,15 @@
+# ===== Geth / Blockchain runtime data =====
+mychain/gethdata-*/
+mychain/**/chaindata/
+mychain/**/ancient/
+
+# ===== Logs =====
+*.log
+
+# ===== Database =====
+*.ibd
+binlog.*
+
+# ===== Docker / runtime data =====
+node/docker/data/
+

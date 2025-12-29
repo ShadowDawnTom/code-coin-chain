@@ -1,0 +1,24 @@
+# docker-compose.yml
+services:
+  mysql:
+    image: mysql:8.4.6 # 也可用 mysql:8.0.x
+    container_name: yatmysql8
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: qewc21+q9hSH-S91sabq
+      MYSQL_DATABASE: yat
+      MYSQL_USER: yat
+      MYSQL_PASSWORD: wy2x*w3jn-u7a+uxb6w
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    mem_limit: 1024m         # 容器级内存上限
+    memswap_limit: 1024m     # 禁止额外 swap（可按需去掉）
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pqewc21+q9hSH-S91sabq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+

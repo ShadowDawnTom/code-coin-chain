@@ -1,0 +1,47 @@
+services:
+  geth-miner:
+    image: ethereum/client-go:v1.13.14
+    container_name: bsc-geth-miner
+    volumes:
+      - /home/freemanbgk01/mychain/gethdata-miner:/root/.ethereum
+      - /tmp/geth_pass_secure.txt:/pass.txt:ro
+    command: >
+      --networkid 12510
+      --port 30303
+      --nat=none
+      --cache=5192
+      --cache.database=20 
+      --state.scheme path
+      --unlock 0xa7a0d03D101B0EEa85341E494143447F2DE5DBB5
+      --password /pass.txt
+      --nodiscover --mine
+      --miner.etherbase 0xa7a0d03D101B0EEa85341E494143447F2DE5DBB5
+      --rpc.txfeecap 3000
+      --verbosity 3
+      --syncmode=full
+      --gcmode=archive
+
+  geth-rpc:
+    image: ethereum/client-go:v1.13.14
+    container_name: bsc-geth-rpc
+    volumes:
+      - /home/freemanbgk01/mychain/gethdata-rpc:/root/.ethereum
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+    command: >
+      --networkid 12510
+      --port 30303
+      --nat=none
+      --http --http.addr 0.0.0.0 --http.vhosts="*" --http.api "eth,net,web3,txpool"
+      --http.corsdomain="*"
+      --ws --ws.addr 0.0.0.0 --ws.origins="*" --ws.api "eth,net,web3,txpool"
+      --rpc.txfeecap 3000
+      --cache=5192
+      --cache.database=20 
+      --state.scheme path
+      --verbosity 3
+      --syncmode=full
+      --gcmode=archive
+      --nodiscover
+
